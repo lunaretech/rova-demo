@@ -9,7 +9,7 @@ export interface RovaEmbedConfig {
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_EMBED_ID?: unknown }): RovaEmbedConfig | null {
+export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_EMBED_ID?: unknown; VITE_ROVA_WIDGET?: unknown }): RovaEmbedConfig | null {
   const id = typeof env.VITE_ROVA_EMBED_ID === "string" ? env.VITE_ROVA_EMBED_ID.trim() : "";
   const raw = typeof env.VITE_ROVA_BASE_URL === "string" ? env.VITE_ROVA_BASE_URL.trim() : "";
   if (!UUID.test(id) || !raw) return null;
@@ -20,20 +20,23 @@ export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_E
     return null;
   }
   if (base.protocol !== "https:" || base.username || base.password || base.pathname !== "/" || base.search || base.hash) return null;
+  // Dois widgets, mesma API de embed e mesmos atributos:
+  //  - "fork" (padrão): o widget original do AnythingLLM, do fork lunaretech/rova-embed, com o tema do lume-ui e o logo da Lunare;
+  //  - "rova": o widget escrito do zero (platform/widget no repo rova), guardado como alternativa.
+  const own = env.VITE_ROVA_WIDGET === "rova";
   return {
-    // Widget próprio do Rova (interface com os tokens do lume-ui), servido por este site. Fala com a API de embed da instância.
-    scriptUrl: "./rova-chat-widget.js",
+    scriptUrl: own ? "./rova-chat-widget.js" : "./anythingllm-chat-widget.min.js",
     attributes: {
       "data-embed-id": id,
       "data-base-api-url": `${base.origin}/api/embed`,
       "data-assistant-name": "Assistente da Casa Aurora",
       "data-button-color": "#b45309",
       "data-user-bg-color": "#b45309",
-      "data-assistant-bg-color": "#f5f5f4",
       "data-greeting": "Olá! Posso ajudar com dúvidas sobre pedidos, entregas e devoluções.",
+      "data-default-messages": "Qual o prazo de entrega?,Como faço uma devolução?",
       "data-send-message-text": "Escreva sua pergunta",
       "data-reset-chat-text": "Nova conversa",
-      "data-default-messages": "Qual o prazo de entrega?,Como faço uma devolução?",
+      "data-language": "pt",
     },
   };
 }
