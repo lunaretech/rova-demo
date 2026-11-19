@@ -31,6 +31,7 @@ export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_E
       "data-base-api-url": `${base.origin}/api/embed`,
       "data-assistant-name": "Assistente da Casa Aurora",
       "data-button-color": "#b45309",
+      "data-chat-icon": "chatBubble",
       "data-user-bg-color": "#b45309",
       "data-greeting": "Olá! Posso ajudar com dúvidas sobre pedidos, entregas e devoluções.",
       "data-default-messages": "Qual o prazo de entrega?,Como faço uma devolução?",
