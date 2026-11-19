@@ -1,5 +1,5 @@
 /**
- * Widget de chat do Rova carregado por script externo. Só entra quando o build recebe o endereço da
+ * Widget de chat do Rova carregado por script. Só entra quando o build recebe o endereço da
  * instância e o id do embed. O id não é segredo: quem limita o uso é a lista de domínios do embed no Rova.
  */
 export interface RovaEmbedConfig {
@@ -21,7 +21,8 @@ export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_E
   }
   if (base.protocol !== "https:" || base.username || base.password || base.pathname !== "/" || base.search || base.hash) return null;
   return {
-    scriptUrl: `${base.origin}/embed/anythingllm-chat-widget.min.js`,
+    // Widget próprio do Rova (interface com os tokens do lume-ui), servido por este site. Fala com a API de embed da instância.
+    scriptUrl: "./rova-chat-widget.js",
     attributes: {
       "data-embed-id": id,
       "data-base-api-url": `${base.origin}/api/embed`,
@@ -32,8 +33,7 @@ export function rovaEmbedConfig(env: { VITE_ROVA_BASE_URL?: unknown; VITE_ROVA_E
       "data-greeting": "Olá! Posso ajudar com dúvidas sobre pedidos, entregas e devoluções.",
       "data-send-message-text": "Escreva sua pergunta",
       "data-reset-chat-text": "Nova conversa",
-      "data-language": "pt",
-      "data-no-sponsor": "true",
+      "data-default-messages": "Qual o prazo de entrega?,Como faço uma devolução?",
     },
   };
 }
